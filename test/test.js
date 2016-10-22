@@ -1,34 +1,44 @@
 const read = require('../lib/read');
 const assert = require('assert');
 const fs = require('fs');
+const rimraf = require('rimraf');
 
 describe('testing bitmap transfomer', () => {
-  it('inverts the colors', (done) => {
-    function invertTest() {
-      //select a specific indexed pixel before mutation
-        //we know its rgb values
-        //then subtract it from 255
-      //run readWrite
-      //select the same indexed pixel after mutation
-      //assert that transformed is what we expect
+  beforeEach(function(done) {
+    rimraf('./another-file.bmp', done);
+    console.log('rimraffed');
+  });
 
-      console.log('in the invert test');
+  it('adds a new altered image', (done) => {
+    console.log('adding image test running');
+    read.readWrite('.non-palette-bitmap.bmp', () => {
+      assert.ok(fs.existsSync('./gc-value-invert.bmp'));
+    });
+    done();
+  });
+
+  it('inverts the colrs, byte by byte', (done) => {
+    console.log('value inversion test running');
+    read.readWrite('./non-palette-bitmap.bmp', (data) => {
+      //know specific byte info at buffer index 25000 = 132
+      //color channel 0 - 255, so subtract 123 from 255
+      assert.deepEqual(132, data[25000]);
       done();
-    }
-    read.readWrite(invertTest);
+    });
   });
 
   it('returns the proper transform', (done) => {
-    function transformTest() {
-      //get golden-chicken buffer
-      //run readWrite on test.file
-      //assert that golden-chicken is same as transformed
-        //need buffer compare function
-      console.log('in the proper transform test');
-      done();
-    }
-    read.readWrite(transformTest);
+    console.log('proper transform test running');
+    //run the transformation
+    read.readWrite('non-palette-bitmap.bmp', (data) => {
+      //get the golden chicken buffer
+      fs.readFile('gc-value-invert.bmp', (err, gcBuf) => {
+        if (err) throw err;
+        //compare golden chicken vs transformed file
+        assert.ok(gcBuf.equals(data));
+        done();
+      });
+    });
   });
-
 
 });

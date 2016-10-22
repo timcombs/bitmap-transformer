@@ -1,3 +1,5 @@
 node_modules
 .DS_Store
 Endianness.key
+another-file.bmp
+npm-debug.log
