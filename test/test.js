@@ -11,8 +11,8 @@ describe('testing bitmap transfomer', () => {
 
   it('adds a new altered image', (done) => {
     console.log('adding image test running');
-    read.readWrite('.non-palette-bitmap.bmp', () => {
-      assert.ok(fs.existsSync('./gc-value-invert.bmp'));
+    read.readWrite('nothing', () => {
+      assert.ok(fs.existsSync('./another-file.bmp'));
     });
     done();
   });
