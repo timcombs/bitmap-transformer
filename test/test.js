@@ -11,10 +11,10 @@ describe('testing bitmap transfomer', () => {
 
   it('adds a new altered image', (done) => {
     console.log('adding image test running');
-    read.readWrite('nothing', () => {
+    read.readWrite('./non-palette-bitmap.bmp', () => {
       assert.ok(fs.existsSync('./another-file.bmp'));
+      done();
     });
-    done();
   });
 
   it('inverts the colrs, byte by byte', (done) => {
